@@ -1,9 +1,22 @@
 const express = require("express");
+var bodyParser = require('body-parser');
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const app = express();
+const pinRoute = require("./routes/pins");
 
-mongoose.connect('mongodb://localhost:27017/myapp', {useNewUrlParser: true});
+dotenv.config();
 
-app.listen(8800,()=>{
+app.use(express.json())
+
+mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true}).then(()=>{
+    console.log("MongoDB Connected")
+})
+.catch((err) => console.log(err));
+
+app.use("/api/pins", pinRoute);
+
+app.listen(8800,  ()=>{
     console.log("Backend Server is running");
 })
+
