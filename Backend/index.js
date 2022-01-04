@@ -5,11 +5,13 @@ const dotenv = require("dotenv");
 const app = express();
 const userRoute = require("./routes/users");
 const pinRoute = require("./routes/pins");
-
+var cors = require('cors')
 
 dotenv.config();
 
-app.use(express.json())
+app.use(express.json());
+
+app.use(cors());
 
 mongoose.connect(process.env.MONGO_URL, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true }).then(()=>{
     console.log("MongoDB Connected")

@@ -6,8 +6,53 @@
 }
 
 label{
+    width: max-content;
     color: tomato;
     font-size: 13px;
-    border-bottom: 1px solid tomato;
+    border-bottom: .5 px solid tomato;
     margin: 3px 0px;
 }
+
+desc{
+    font-size: 14px;
+}
+
+.star{
+    color: gold;
+}
+
+.username{
+    font-size: 14px;
+}
+
+.date{
+    font-size: 12px;
+}
+
+form{
+    width: 250px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+input{
+    border: none;
+    border-bottom: 1px solid gray;
+}
+
+input::placeholder, textarea::placeholder{
+    font-size: 12px;
+    color: rgb(172, 137, 137);
+}
+
+.submitButton{
+    border: none;
+    padding: 5px;
+    border-radius: 5px;
+    color: white;
+    background: tomato;
+    cursor: pointer;
+}
+
