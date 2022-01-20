@@ -4,15 +4,18 @@ import { Room, Stars } from "@material-ui/icons";
 import "./app.css";
 import axios from "axios";
 import { format } from "timeago.js";
+import Register from "./components/Register";
 
 function App() {
-  const currentUser = "jone";
+  const [currentUser, setCurrentUser] = useState(null);
   const [pins, setPins] = useState([]);
   const [currentPlaceId, setCurrentPlaceId] = useState(null);
   const [newPlace, setNewPlace] = useState(null);
   const [title, setTitle] = useState(null);
   const [desc, setDesc] = useState(null);
   const [rating, setRating] = useState(0);
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
   const [viewport, setViewport] = useState({
     width: "100vw",
     height: "100vh",
@@ -46,6 +49,25 @@ function App() {
     });
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const newPin = {
+      username: currentUser,
+      title,
+      desc,
+      rating,
+      lat: newPlace.lat,
+      long: newPlace.long,
+    };
+    try {
+      const res = await axios.post("http://localhost:8800/api/pins", newPin);
+      setPins([...pins, res.data]);
+      setNewPlace(null);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <div className="App">
       <ReactMapGL
@@ -61,8 +83,8 @@ function App() {
             <Marker
               latitude={p.lat}
               longitude={p.long}
-              offsetLeft={-20}
-              offsetTop={-10}
+              offsetLeft={-viewport.zoom * 3.5}
+              offsetTop={-viewport.zoom * 7}
             >
               <Room
                 style={{
@@ -89,12 +111,8 @@ function App() {
                   <label>Review</label>
                   <p className="desc">{p.desc}</p>
                   <label>Rating</label>
-                  <div className="starts">
-                    <Stars className="star" />
-                    <Stars className="star" />
-                    <Stars className="star" />
-                    <Stars className="star" />
-                    <Stars className="star" />
+                  <div className="stars">
+                    {Array(p.rating).fill(<Stars className="star" />)}
                   </div>
                   <label>Information</label>
                   <span className="username">
@@ -128,7 +146,7 @@ function App() {
                   onChange={(e) => setDesc(e.target.value)}
                 />
                 <label>Rating</label>
-                <select onChange={(e)=>setRating(e.target.value)}>
+                <select onChange={(e) => setRating(e.target.value)}>
                   <option value="1">1</option>
                   <option value="2">2</option>
                   <option value="3">3</option>
@@ -142,6 +160,22 @@ function App() {
             </div>
           </Popup>
         )}
+        {currentUser ? (
+          <button className="button logout">Log out</button>
+        ) : (
+          <div className="buttons">
+            <button className="button login" onClick={() => setShowLogin(true)}>
+              Login
+            </button>
+            <button
+              className="button register"
+              onClick={() => setShowRegister(true)}
+            >
+              Register
+            </button>
+          </div>
+        )}
+        <Register />
       </ReactMapGL>
     </div>
   );
